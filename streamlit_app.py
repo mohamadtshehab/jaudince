@@ -4,6 +4,8 @@ from PIL import Image
 import io
 import base64
 import time
+import os
+from dotenv import load_dotenv
 
 # Configure the page
 st.set_page_config(
@@ -42,6 +44,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+load_dotenv()
+
 def main():
     # Header
     st.markdown('<h1 class="main-header">🏥 Jaundice Diagnosis Tool</h1>', unsafe_allow_html=True)
@@ -49,9 +53,10 @@ def main():
     # Sidebar for server configuration
     with st.sidebar:
         st.header("⚙️ Server Configuration")
+        default_url = "http://127.0.0.1:5000"
         server_url = st.text_input(
             "Server URL",
-            value="https://112dac6022d0.ngrok-free.app",  # Replace with your actual ngrok URL
+            value=default_url,  # Now reads from .env if available
             help="URL of your Flask server (use ngrok URL if running on Colab)"
         )
         
@@ -99,7 +104,7 @@ def main():
         if uploaded_file is not None:
             try:
                 image = Image.open(uploaded_file)
-                st.image(image, caption="Uploaded Image", use_column_width=True)
+                st.image(image, caption="Uploaded Image", use_container_width=True)
                 
                 # Analyze button
                 if st.button("🔍 Analyze Image", type="primary", use_container_width=True):
